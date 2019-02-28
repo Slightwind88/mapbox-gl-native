@@ -8,6 +8,7 @@ import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.testapp.action.MapboxMapAction
+import com.mapbox.mapboxsdk.testapp.action.MapboxMapAction.invoke
 import com.mapbox.mapboxsdk.testapp.activity.EspressoTest
 import com.mapbox.mapboxsdk.testapp.activity.espresso.EspressoTestActivity
 import com.mapbox.mapboxsdk.testapp.utils.TestingAsyncUtils
@@ -29,7 +30,7 @@ class StyleLoadTest : EspressoTest() {
     @Test
     fun updateSourceAfterStyleLoad() {
         validateTestSetup()
-        MapboxMapAction.invoke(mapboxMap) { uiController: UiController, mapboxMap: MapboxMap ->
+        invoke(mapboxMap) { uiController: UiController, mapboxMap: MapboxMap ->
             val source = GeoJsonSource("id")
             val layer = SymbolLayer("id", "id")
             mapboxMap.setStyle(Style.Builder().withSource(source).withLayer(layer))

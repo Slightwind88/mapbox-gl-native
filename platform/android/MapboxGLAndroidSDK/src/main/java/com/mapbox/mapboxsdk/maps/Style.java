@@ -440,18 +440,13 @@ public class Style {
    */
   void onWillStartLoadingMap() {
     fullyLoaded = false;
-    for (Source source : sources.values()) {
-      if (source != null) {
-        source.setDetached();
-        nativeMap.removeSource(source);
-      }
+
+    for (Source source : nativeMap.getSources()) {
+      source.setDetached();
     }
 
-    for (Layer layer : layers.values()) {
-      if (layer != null) {
-        layer.setDetached();
-        nativeMap.removeLayer(layer);
-      }
+    for (Layer layer : nativeMap.getLayers()) {
+      layer.setDetached();
     }
 
     for (Map.Entry<String, Bitmap> bitmapEntry : images.entrySet()) {

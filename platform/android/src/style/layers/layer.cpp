@@ -91,7 +91,15 @@ namespace android {
         return layer;
     }
 
+    void Layer::setDetached(jni::JNIEnv&) {
+        detached = true;
+    }
+
     void Layer::setLayoutProperty(jni::JNIEnv& env, const jni::String& jname, const jni::Object<>& jvalue) {
+        if (detached) {
+            return;
+        }
+
         // Convert and set property
         optional<mbgl::style::conversion::Error> error = layer.setLayoutProperty(jni::Make<std::string>(env, jname), Value(env, jvalue));
         if (error) {
@@ -101,6 +109,10 @@ namespace android {
     }
 
     void Layer::setPaintProperty(jni::JNIEnv& env, const jni::String& jname, const jni::Object<>& jvalue) {
+        if (detached) {
+            return;
+        }
+
         // Convert and set property
         optional<mbgl::style::conversion::Error> error = layer.setPaintProperty(jni::Make<std::string>(env, jname), Value(env, jvalue));
         if (error) {
@@ -110,6 +122,10 @@ namespace android {
     }
 
     void Layer::setFilter(jni::JNIEnv& env, const jni::Array<jni::Object<>>& jfilter) {
+        if (detached) {
+            return;
+        }
+
         using namespace mbgl::style;
         using namespace mbgl::style::conversion;
 
@@ -137,6 +153,9 @@ namespace android {
     }
 
     void Layer::setSourceLayer(jni::JNIEnv& env, const jni::String& sourceLayer) {
+        if (detached) {
+            return;
+        }
         layer.setSourceLayer(jni::Make<std::string>(env, sourceLayer));
     }
 
@@ -157,10 +176,16 @@ namespace android {
     }
 
     void Layer::setMinZoom(jni::JNIEnv&, jni::jfloat zoom) {
+        if (detached) {
+            return;
+        }
         layer.setMinZoom(zoom);
     }
 
     void Layer::setMaxZoom(jni::JNIEnv&, jni::jfloat zoom) {
+        if (detached) {
+            return;
+        }
         layer.setMaxZoom(zoom);
     }
 
@@ -189,7 +214,8 @@ namespace android {
             METHOD(&Layer::getMaxZoom, "nativeGetMaxZoom"),
             METHOD(&Layer::setMinZoom, "nativeSetMinZoom"),
             METHOD(&Layer::setMaxZoom, "nativeSetMaxZoom"),
-            METHOD(&Layer::getVisibility, "nativeGetVisibility")
+            METHOD(&Layer::getVisibility, "nativeGetVisibility"),
+            METHOD(&Layer::setDetached, "nativeSetDetached")
         );
 
     }
